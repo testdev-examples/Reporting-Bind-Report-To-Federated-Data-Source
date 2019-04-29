@@ -1,13 +1,12 @@
-﻿Imports DevExpress.DataAccess.ConnectionParameters
-Imports DevExpress.DataAccess.DataFederation
-Imports DevExpress.DataAccess.Excel
-Imports DevExpress.DataAccess.Sql
-Imports DevExpress.XtraReports.Configuration
-Imports DevExpress.XtraReports.UI
-Imports System
+﻿Imports System
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Windows.Forms
+Imports DevExpress.DataAccess.ConnectionParameters
+Imports DevExpress.DataAccess.Sql
+Imports DevExpress.DataAccess.Excel
+Imports DevExpress.DataAccess.DataFederation
+Imports DevExpress.XtraReports.UI
 
 Namespace BindReportToFederatedDataSource
     Partial Public Class Form1
@@ -23,23 +22,41 @@ Namespace BindReportToFederatedDataSource
         End Sub
 
         Private Shared Function CreateFederationDataSource(ByVal sql As SqlDataSource, ByVal excel As ExcelDataSource) As FederationDataSource
+            ' Create a federated query's SQL and Excel sources.
             Dim sqlSource As New Source(sql.Name, sql, "Categories")
             Dim excelSource As New Source(excel.Name, excel, "")
 
+            ' Create a federated query.
             Dim selectNode = sqlSource.From().Select("CategoryName").Join(excelSource, "[Excel_Products.CategoryID] = [Sql_Categories.CategoryID]").Select("CategoryID", "ProductName", "UnitPrice").Build("CategoriesProducts")
-                ' Select the "CategoryName" column from 
-                ' the SQL Source for the Federation query result
-                ' Join an Excel Source using the "[Excel_Products.CategoryID] = [Sql_Categories.CategoryID]" condition
-                ' Select the required columns from the Excel Source for the Federation query result
-                ' Name a Federation query
+                ' Select the "CategoryName" column from the SQL source.
+                ' Join the SQL source with the Excel source based on the "CategoryID" key field.
+                ' Select columns from the Excel source.
+                ' Specify the query's name and build it. 
+
+            ' Create a federated data source and add the federated query to the collection.
             Dim federationDataSource = New FederationDataSource()
             federationDataSource.Queries.Add(selectNode)
+            ' Build the data source schema to display it in the Field List.
             federationDataSource.RebuildResultSchema()
+
             Return federationDataSource
         End Function
 
         Public Shared Function CreateReport() As XtraReport
+            ' Create a new report.
             Dim report = New XtraReport()
+
+            ' Create data sources. 
+            Dim sqlDataSource = CreateSqlDataSource()
+            Dim excelDataSource = CreateExcelDataSource()
+            Dim federationDataSource = CreateFederationDataSource(sqlDataSource, excelDataSource)
+            ' Add all data sources to the report to avoid serialization issues. 
+            report.ComponentStorage.AddRange(New IComponent() { sqlDataSource, excelDataSource, federationDataSource })
+            ' Assign a federated data source to the report.
+            report.DataSource = federationDataSource
+            report.DataMember = "CategoriesProducts"
+
+            ' Add the Detail band and two labels bound to the federated data source's fields.
             Dim detailBand = New DetailBand() With {.HeightF = 50}
             report.Bands.Add(detailBand)
             Dim categoryLabel = New XRLabel() With {.WidthF = 150}
@@ -50,13 +67,6 @@ Namespace BindReportToFederatedDataSource
             categoryLabel.ExpressionBindings.Add(New ExpressionBinding("BeforePrint", "Text", "[CategoryName]"))
             productLabel.ExpressionBindings.Add(New ExpressionBinding("BeforePrint", "Text", "[ProductName]"))
             detailBand.Controls.AddRange( { categoryLabel, productLabel })
-
-            Dim sqlDataSource = CreateSqlDataSource()
-            Dim excelDataSource = CreateExcelDataSource()
-            Dim federationDataSource = CreateFederationDataSource(sqlDataSource, excelDataSource)
-            report.ComponentStorage.AddRange(New IComponent() { sqlDataSource, excelDataSource, federationDataSource })
-            report.DataSource = federationDataSource
-            report.DataMember = "CategoriesProducts"
 
             Return report
         End Function
