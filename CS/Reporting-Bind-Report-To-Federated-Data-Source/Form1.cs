@@ -1,11 +1,12 @@
 using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 using DevExpress.DataAccess.ConnectionParameters;
 using DevExpress.DataAccess.Sql;
 using DevExpress.DataAccess.Excel;
 using DevExpress.DataAccess.DataFederation;
+using System.ComponentModel;
+using System.Drawing;
 using DevExpress.XtraReports.UI;
 
 namespace BindReportToFederatedDataSource {
@@ -18,7 +19,6 @@ namespace BindReportToFederatedDataSource {
 			ReportDesignTool designTool = new ReportDesignTool(CreateReport());
 			designTool.ShowRibbonDesignerDialog();
 		}
-
 		static FederationDataSource CreateFederationDataSource(SqlDataSource sql, ExcelDataSource excel) {
 			// Create a federated query's SQL and Excel sources.
 			Source sqlSource = new Source(sql.Name, sql, "Categories");
@@ -43,7 +43,6 @@ namespace BindReportToFederatedDataSource {
 
 			return federationDataSource;
 		}
-
 		public static XtraReport CreateReport() {
 			// Create a new report.
 			var report = new XtraReport();
@@ -69,19 +68,17 @@ namespace BindReportToFederatedDataSource {
 
 			return report;
 		}
-
 		static SqlDataSource CreateSqlDataSource() {
-			var connectionParameters = new Access97ConnectionParameters("Data/nwind.mdb", "", "");
+			var connectionParameters = new Access97ConnectionParameters(Path.Combine(Path.GetDirectoryName(typeof(Form1).Assembly.Location), "Data/nwind.mdb"), "", "");
 			var sqlDataSource = new SqlDataSource(connectionParameters) { Name = "Sql_Categories" };
 			var categoriesQuery = SelectQueryFluentBuilder.AddTable("Categories").SelectAllColumnsFromTable().Build("Categories");
 			sqlDataSource.Queries.Add(categoriesQuery);
 			sqlDataSource.RebuildResultSchema();
 			return sqlDataSource;
 		}
-
 		static ExcelDataSource CreateExcelDataSource() {
 			var excelDataSource = new ExcelDataSource() { Name = "Excel_Products" };
-			excelDataSource.FileName = "Data/Products.xlsx";
+			excelDataSource.FileName = Path.Combine(Path.GetDirectoryName(typeof(Form1).Assembly.Location), "Data/Products.xlsx");
 			excelDataSource.SourceOptions = new ExcelSourceOptions() {
 				ImportSettings = new ExcelWorksheetSettings("Sheet"),
 			};
