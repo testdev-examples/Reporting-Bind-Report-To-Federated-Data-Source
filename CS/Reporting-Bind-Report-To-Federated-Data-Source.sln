@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BindReportToFederatedDataSource", "Reporting-Bind-Report-To-Federated-Data-Source\BindReportToFederatedDataSource.csproj", "{B889FF52-7E07-455A-B924-6933DAC847B1}"
 EndProject
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {FADC5C34-9731-48DA-8894-ECEBD1C624AC}
+		SolutionGuid = {59750B06-67D0-42C8-B65D-800C9DCA4F93}
 	EndGlobalSection
 EndGlobal
