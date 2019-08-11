@@ -59,9 +59,9 @@ Namespace BindReportToFederatedDataSource
             Dim detailBand = New DetailBand() With {.HeightF = 50}
             report.Bands.Add(detailBand)
             Dim categoryLabel = New XRLabel() With {.WidthF = 150}
-            Dim productLabel = New XRLabel() With {
-                .WidthF = 300,
-                .LocationF = New PointF(200, 0)
+            Dim productLabel = New XRLabel() With { _
+                .WidthF = 300, _
+                .LocationF = New PointF(200, 0) _
             }
             categoryLabel.ExpressionBindings.Add(New ExpressionBinding("BeforePrint", "Text", "[CategoryName]"))
             productLabel.ExpressionBindings.Add(New ExpressionBinding("BeforePrint", "Text", "[ProductName]"))
