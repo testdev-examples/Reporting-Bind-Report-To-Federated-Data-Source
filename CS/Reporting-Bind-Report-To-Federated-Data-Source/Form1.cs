@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using System.IO;
 using DevExpress.DataAccess.ConnectionParameters;
 using DevExpress.DataAccess.Sql;
 using DevExpress.DataAccess.Excel;
@@ -8,6 +7,7 @@ using DevExpress.DataAccess.DataFederation;
 using System.ComponentModel;
 using System.Drawing;
 using DevExpress.XtraReports.UI;
+using System.IO;
 
 namespace BindReportToFederatedDataSource {
 	public partial class Form1 : Form {
